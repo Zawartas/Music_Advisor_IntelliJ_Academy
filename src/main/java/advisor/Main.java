@@ -1,4 +1,4 @@
-package com.company;
+package advisor;
 
 import java.util.Scanner;
 
@@ -10,11 +10,10 @@ public class Main {
 
         boolean exit = false;
         boolean auth = false;
-        int size = 5; // TODO to be given as an argument
         Scanner scanner = new Scanner(System.in);
         Spotify spotify = null;
         ApiOperationExecutor executor = null;
-        QueryArgs queryArgs = null;
+        QueryArgs queryArgs = new QueryArgs.Builder(ConfigData.getSIZE()).build();
 
         while (!exit && scanner.hasNext()) {
             String command = scanner.next();
@@ -27,7 +26,6 @@ public class Main {
             }
 
             switch (command) {
-                // TODO maybe not switch/case but HashMap<String, Something>
                 case "auth":
                     Authentication authentication = new Authentication();
 
@@ -42,40 +40,46 @@ public class Main {
                     break;
                 case "new":
                     System.out.println("---NEW RELEASES---");
-                    queryArgs = new QueryArgs.Builder(size).build();
-                    System.out.println(executor.executeOperation(new ShowNewReleases(spotify), queryArgs).body());
+                    queryArgs = new QueryArgs.Builder(ConfigData.getSIZE()).build();
+                    executor.executeOperation(new ShowNewReleases(spotify), queryArgs);
                     break;
                 case "featured":
                     System.out.println("---FEATURED---");
-                    queryArgs = new QueryArgs.Builder(size).build();
-                    System.out.println(executor.executeOperation(new ShowFeaturedReleases(spotify), queryArgs).body());
+                    queryArgs = new QueryArgs.Builder(ConfigData.getSIZE()).build();
+                    executor.executeOperation(new ShowFeaturedReleases(spotify), queryArgs);
                     break;
                 case "categories":
                     System.out.println("---CATEGORIES---");
-                    queryArgs = new QueryArgs.Builder(size).build();
-                    String response = executor.executeOperation(new ShowAllCategories(spotify), queryArgs).body();
-                    DataViewer.showAllCategories(response);
+                    queryArgs = new QueryArgs.Builder(ConfigData.getSIZE()).build();
+                    executor.executeOperation(new ShowAllCategories(spotify), queryArgs);
                     break;
                 case "playlists":
                     String category = scanner.nextLine().trim();
                     System.out.println("---" + category + " PLAYLISTS---");
-                    queryArgs = new QueryArgs.Builder(size).setCategory(category).build();
-                    System.out.println(executor.executeOperation(new ShowCategoryPlaylists(spotify), queryArgs).body());
+                    queryArgs = new QueryArgs.Builder(ConfigData.getSIZE()).setCategory(category).build();
+                    executor.executeOperation(new ShowCategoryPlaylists(spotify), queryArgs);
                     break;
                 case "library":
-                    queryArgs = new QueryArgs.Builder(size).build();
-                    System.out.println(executor.executeOperation(new ShowUserLibrary(spotify), queryArgs).body());
+                    queryArgs = new QueryArgs.Builder(ConfigData.getSIZE()).build();
+                    executor.executeOperation(new ShowUserLibrary(spotify), queryArgs);
+                    break;
+                case "save_lib":
+                    queryArgs = new QueryArgs.Builder(ConfigData.getSIZE()).build();
+                    executor.executeOperation(new SaveLibraryToFile(spotify), queryArgs);
                     break;
                 case "next":
                     assert queryArgs != null;
                     queryArgs.increaseOffset();
-                    //TODO Houston we've got a problem!!! Printing response also is dependent on how HttpResponse looks!!!
-                    String response = executor.executeLastOperation(queryArgs).body());
+                    executor.executeLastOperation(queryArgs);
                     break;
                 case "prev":
                     assert queryArgs != null;
+                    if (queryArgs.getOffset() - queryArgs.getSize() < 0) {
+                        System.out.println("Error. No more pages.");
+                        break;
+                    }
                     queryArgs.decreaseOffset();
-                    System.out.println(executor.executeLastOperation(queryArgs).body());
+                    executor.executeLastOperation(queryArgs);
                     break;
                 case "exit":
                     System.out.println("---GOODBYE!---");

@@ -1,6 +1,4 @@
-package com.company;
-
-import java.net.http.HttpResponse;
+package advisor;
 
 public class ShowNewReleases extends AbstractShowController implements ApiOperation {
 
@@ -9,8 +7,8 @@ public class ShowNewReleases extends AbstractShowController implements ApiOperat
     }
 
     @Override
-    public HttpResponse<String> getResponse(QueryArgs queryArgs) {
-        return spotify.getNewReleases(queryArgs);
+    public void execute(QueryArgs queryArgs) {
+        spotify.showNewReleases(queryArgs);
     }
 }
 

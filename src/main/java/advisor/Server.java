@@ -1,4 +1,4 @@
-package com.company;
+package advisor;
 
 import com.sun.net.httpserver.HttpServer;
 

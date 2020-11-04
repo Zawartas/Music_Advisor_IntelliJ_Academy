@@ -1,4 +1,4 @@
-package com.company;
+package advisor;
 
 public class QueryArgs {
 
@@ -57,7 +57,7 @@ public class QueryArgs {
     }
 
     private QueryArgs() {
-        // possible only with Builder
+        // c-tor possible only with Builder
     }
 
 }

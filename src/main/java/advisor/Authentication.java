@@ -1,4 +1,4 @@
-package com.company;
+package advisor;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

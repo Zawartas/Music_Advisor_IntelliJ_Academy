@@ -1,4 +1,4 @@
-package com.company;
+package advisor;
 
 public abstract class AbstractShowController {
     protected Spotify spotify;
